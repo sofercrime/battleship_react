@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { Grid, Row } from 'react-bootstrap';
 import './assets/css/App.css';
 import BattleField from './components/BattleField.js';
@@ -10,26 +10,34 @@ import Stats from "./components/Stats";
 import { shipTypes } from './constants/constants';
 import { getBattleField, makeClone } from './helpers/generateBattleField';
 
+function useWindowSize() {
+  const [size, setSize] = useState([0, 0]);
+  useLayoutEffect(() => {
+    function updateSize() {
+      setSize([window.innerWidth, window.innerHeight]);
+    }
+    window.addEventListener('resize', updateSize);
+    updateSize();
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+  return size;
+}
+
 const App = () => {
   const [battleField, setBattleField] = useState(null);
   const [flotilla, setFlotilla] = useState(_.cloneDeep(shipTypes));
   const [shots, setShots] = useState(0);
   const [hits, setHits] = useState(0);
   const [screenMode, setScreenMode] = useState(null);
+  const [width, height] = useWindowSize();
 
   useEffect(() => {
-    const updateDimensions = () => {
-      if (window.innerWidth < 992) {
-        setScreenMode('tablet');
-      } else {
-        setScreenMode('desktop');
-      }
+    if (width < 992) {
+      setScreenMode('tablet');
+    } else {
+      setScreenMode('desktop');
     }
-    window.addEventListener("resize", updateDimensions());
-    return() => {
-      window.removeEventListener("resize", updateDimensions());
-    }    
-  });
+  },[width]);
 
   const onClick = () => {
     let newFlotilla = _.cloneDeep(shipTypes);
