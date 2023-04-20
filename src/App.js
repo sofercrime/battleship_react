@@ -29,7 +29,7 @@ const App = () => {
   const [shots, setShots] = useState(0);
   const [hits, setHits] = useState(0);
   const [screenMode, setScreenMode] = useState(null);
-  const [width, height] = useWindowSize();
+  const [width] = useWindowSize();
 
   useEffect(() => {
     if (width < 992) {
