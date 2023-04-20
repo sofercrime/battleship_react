@@ -29,7 +29,7 @@ const App = () => {
     return() => {
       window.removeEventListener("resize", updateDimensions());
     }    
-  },[]);
+  });
 
   const onClick = () => {
     let newFlotilla = _.cloneDeep(shipTypes);
